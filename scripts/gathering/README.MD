@@ -4,6 +4,7 @@ Script to gather latency data.
 Created for Ubuntu 22.04 (jammy jellyfish)
 
 The script takes 2 parameters:
+
   file number or "next"
   the latency (delay) amount in microseconds
 
