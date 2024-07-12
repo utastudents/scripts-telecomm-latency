@@ -1,7 +1,7 @@
 # telecomm-latency/scripts/gathering
 Telecommunication latency data-gathering script.
 
-Code related to a lab experiment gathering conversational data under simulated telecommunications latency scenarios.
+Code related to a lab experiment gathering conversational data under simulated telecommunications latency scenarios. The latency is applied during minutes 13-18.
 
 
 Created for Ubuntu 22.04 (jammy jellyfish).
