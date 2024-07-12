@@ -13,6 +13,6 @@ The script takes 2 parameters:
 
 The second parameter defaults to random if omitted. Thus, after testing was complete, I always ran the script this way
 
-    python latency.py next
+    python3 latency.py next
 
 Hardware: two sound cards, each with a microphone and headphones connected. 
