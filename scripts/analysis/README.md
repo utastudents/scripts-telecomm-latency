@@ -2,7 +2,7 @@
 Telecommunication latency analysis scripts.
 
 Code related to a lab experiment gathering conversational data under simulated telecommunications latency scenarios.
-
+See also: https://github.com/utastudents/scripts-conversation-acoustic-analysis 
 
 All code created on Windows 11 and provided for reference. Changes will likely be required to run the code on your system.
 
