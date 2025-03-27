@@ -15,7 +15,7 @@ ggplot(data=minute,aes(y=trans_cnt, x= minute)) +
   stat_summary(fun.data = mean_cl_boot, geom = "errorbar", linewidth=1,aes(color=graph_block)) +
   ylab("Transitions per minute") +
   xlab("Minute") +
-  stat_smooth(method="loess",formula=y~x, span=0.5) +
+  stat_smooth(method="loess",formula=y~x, span=0.5, se=FALSE) +
   labs(color="Block:") +
   theme(legend.position = "bottom")
 ggsave(filename="C:\\Users\\david\\documents\\synced\\dissertation\\latency\\images\\tr by min.jpg",device="jpg",width = 6, height = 4,dpi = 300)
@@ -81,6 +81,14 @@ ggplot(data=trans,aes(y=gap, x= graph_block2,color=graph_block2)) +
   scale_x_discrete(name=element_blank())  
 ggsave(filename="C:\\Users\\david\\Documents\\synced\\Dissertation\\Latency\\images\\mean gap by graph_block 3p.jpg",device="jpg",width = 4, height = 3,dpi = 300)
 
+ggplot(data=trans[trans$minute<25,],aes(y=gap, x= minute,color=min_block)) +
+  theme_bw() +
+  stat_summary(fun=mean, geom="point", shape = 1,size = 3) + 
+  stat_summary(fun.data = mean_cl_boot, fun.args = list(conf.int = 0.99), geom = "errorbar", linewidth=1, width=0.4) +
+  theme(legend.position = "none") +  
+  ylab("Gap length (s)")
+ggsave(filename="C:\\Users\\david\\Documents\\synced\\Dissertation\\Latency\\images\\mean gap by min 3p.jpg",device="jpg",width = 4, height = 3,dpi = 300)
+
 #w/ base as first factor and init as 2nd
 trans$block2<-factor(trans$graph_block,levels=c('base','init','wrmp','ltnc','post'))
 
@@ -97,6 +105,18 @@ ggplot(data=trans,aes(y=gap, x= graph_block2,color=graph_block2)) +
   theme(legend.position = "none")
 ggsave(filename="C:\\Users\\david\\Documents\\synced\\Dissertation\\Latency\\images\\gap boxplot.jpg",device="jpg",width = 5, height = 4,dpi = 300)
 
+##planned
+
+lm.od.bl.a <- lm(overlap_spm_diff ~ ltnc_ms, data=base_ltnc)
+summary(lm.od.bl.a)
+
+ggplot(data=base_ltnc, aes(x=ltnc_ms,y=overlap_spm_diff)) +
+  geom_point() +
+  theme_bw() +
+  geom_smooth(method="lm", formula=y~x) +
+  ylab("Difference in overlap duration (s/min)") +
+  xlab("Latency (ms)")
+ggsave(filename="C:\\Users\\david\\Documents\\synced\\Dissertation\\Latency\\images\\base_ltnc od diff 3p.jpg",device="jpg",width = 6, height = 4,dpi = 300)
 #base_post
 #no rel between latency amt and mean gap in post-latency block
 ggplot(data=base_post,aes(y=mean_gap_diff, x= ltnc_ms)) +
@@ -115,7 +135,9 @@ with(trans,Median.test(gap,block,alpha=0.01))
 trans.test <- trans %>% group_by(block) %>% mutate(quartile = ntile(gap, 4)) %>% ungroup()
 sqldf('select block, quartile, count(1) from \"trans.test\" group by block, quartile')
 
+#median of bottom half (1st 2 quartiles)
 with(trans.test[trans.test$quartile<3,],Median.test(gap,block,alpha=0.01))
+#median of top half (top 2 quartiles)
 with(trans.test[trans.test$quartile>2,],Median.test(gap,block,alpha=0.01))
 
 ansari.test(trans$gap[trans$block=='base'],trans$gap[trans$block=='post'],conf.int=TRUE,conf.level=0.99)
